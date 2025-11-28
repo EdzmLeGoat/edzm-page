@@ -65,6 +65,8 @@ const pushbackFrames = 3;
 
 const platformSpeed = 48;
 
+const initialScoreDelay = 3;
+
 //stylistic constants
 const backgroundTransparency = 0.55;
 const outlineWidth = 1;

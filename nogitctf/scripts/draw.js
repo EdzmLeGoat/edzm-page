@@ -240,7 +240,6 @@ const drawEverything = (objects, dontDraw) => {
         crownRect.w,
         crownRect.h
       );
-      crownRect.drawSelf();
     }
   }
   clearRect.drawSelf();

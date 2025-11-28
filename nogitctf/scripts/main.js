@@ -213,6 +213,7 @@ const doThreePlayerLoop = (level) => {
     threePlayerBlueScore,
     threePlayerGreenScore,
   ];
+  const frameDelay = fps * initialScoreDelay;
   return new Promise((resolve) => {
     const loopInterval = setInterval(() => {
       if (!isRunning) return;
@@ -246,7 +247,7 @@ const doThreePlayerLoop = (level) => {
           if (invulnerableFrames[player.index] == 0) {
             inDangers[player.index] = true;
           }
-          if (frame > fps * 2) {
+          if (frame > frameDelay) {
             if (frame % fps == 0) {
               const el = scoreElements[player.index];
               const currentScore =
