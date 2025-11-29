@@ -244,11 +244,12 @@ lev4FarVert2 = new MovingRectangle(
   farSpeeds,
   false
 );
-veryfardist = 605;
+veryfardist = 560;
 veryfarwidth = 60;
+veryfary = groundPos - 160;
 lev4Platform13 = new Rectangle(
   canvCenter - veryfardist,
-  groundPos - 90,
+  veryfary,
   veryfarwidth,
   10,
   render,
@@ -261,7 +262,7 @@ lev4Platform13 = new Rectangle(
 );
 lev4Platform14 = new Rectangle(
   canvCenter + veryfardist - veryfarwidth,
-  groundPos - 90,
+  veryfary,
   veryfarwidth,
   10,
   render,

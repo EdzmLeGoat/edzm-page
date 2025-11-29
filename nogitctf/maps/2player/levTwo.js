@@ -40,10 +40,10 @@ lev2Platform3 = new Rectangle(
 );
 
 lev2Platform4 = new Rectangle(
-  canvCenter - 15,
+  canvCenter - 50,
   groundPos - 135,
-  30,
-  70,
+  100,
+  20,
   render,
   0,
   0,
@@ -84,9 +84,22 @@ lev2Platform6 = new Rectangle(
 );
 
 lev2Platform7 = new Rectangle(
-  txpos - 10,
+  txpos - 5,
   groundPos - 100,
-  20,
+  10,
+  100,
+  render,
+  0,
+  0,
+  0,
+  1,
+  false,
+  "lev2t2"
+);
+lev2Platform9 = new Rectangle(
+  txpos + 35,
+  groundPos - 100,
+  10,
   100,
   render,
   0,
@@ -97,9 +110,22 @@ lev2Platform7 = new Rectangle(
   "lev2t2"
 );
 lev2Platform8 = new Rectangle(
-  txpos2 - 10,
+  txpos2 - 5,
   groundPos - 100,
-  20,
+  10,
+  100,
+  render,
+  0,
+  0,
+  0,
+  1,
+  false,
+  "lev2t2"
+);
+lev2Platform10 = new Rectangle(
+  txpos2 - 45,
+  groundPos - 100,
+  10,
   100,
   render,
   0,
@@ -240,6 +266,8 @@ lev2Platforms = [
   lev2Platform6,
   lev2Platform7,
   lev2Platform8,
+  lev2Platform9,
+  lev2Platform10,
   lev2centerBorderThing,
 ];
 lev2Platforms.forEach((platform) => {
