@@ -528,9 +528,7 @@ function threePlayerDoEverything(objects, platforms, movingPlats, areMoving) {
 
   for (const player of gamePlayers) {
     if (pushingAnims[player.index]) {
-      colors = [0, 0, 0];
-      colors[player.index] = 255;
-      player.oc = `rgba(${colors[0]},${colors[2]},${colors[1]},1)`;
+      player.oc = player.flashColor;
       player.outlineWidth = reboundWidth;
     } else {
       player.oc = "white";

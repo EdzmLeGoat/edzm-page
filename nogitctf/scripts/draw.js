@@ -67,7 +67,8 @@ class Player extends Rectangle {
     leftKey,
     downKey,
     rightKey,
-    index
+    index,
+    flashColor
   ) {
     super(
       xpos,
@@ -94,6 +95,7 @@ class Player extends Rectangle {
     this.flagged = false;
     this.index = index;
     this.ow = outlineWidth;
+    this.flashColor = flashColor;
   }
   updateX = () => {
     this.x += this.xvel;

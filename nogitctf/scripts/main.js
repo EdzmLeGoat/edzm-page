@@ -188,22 +188,11 @@ const doThreePlayerLoop = (level) => {
   }
 
   let isRunning = true;
-  let tiebreaker = 0;
-  gamePlayers[tiebreaker].flagged = true;
-  gamePlayers[tiebreaker].movementSpeed = flaggedSpeed;
-
-  let threePlayerResetAll = () => {
-    //all players colliding
-    tiebreaker = (tiebreaker + 1) % 3;
-    resetAll(level);
-    for (let i = 0; i < 3; i++) {
-      deadFrames[i] = fps * initialTimeout;
-    }
-    gamePlayers[tiebreaker].flagged = true;
-    gamePlayers[tiebreaker].movementSpeed = flaggedSpeed;
-  };
+  let tiebreaker = Math.floor(Math.random() * 3);
   let changeCrown = (giver, holder) => {
-    deadFrames[giver.index] = threePlayerReset(giver, level);
+    if (giver) {
+      deadFrames[giver.index] = threePlayerReset(giver, level);
+    }
     holder.flagged = true;
     holder.movementSpeed = flaggedSpeed;
     invulnerableFrames[holder.index] = fps * 2;
@@ -216,11 +205,25 @@ const doThreePlayerLoop = (level) => {
       gray.g = 255;
       gray.b = 255;
     } else {
-      gray.r = 0;
-      gray.g = 255;
-      gray.b = 0;
+      //139, 222, 38
+      gray.r = 139;
+      gray.g = 222;
+      gray.b = 38;
     }
   };
+
+  changeCrown(null, gamePlayers[tiebreaker]);
+
+  let threePlayerResetAll = () => {
+    //all players colliding
+    tiebreaker = (tiebreaker + 1) % 3;
+    resetAll(level);
+    for (let i = 0; i < 3; i++) {
+      deadFrames[i] = fps * initialTimeout;
+    }
+    changeCrown(null, gamePlayers[tiebreaker]);
+  };
+
   let scoreElements = [
     threePlayerRedScore,
     threePlayerBlueScore,
@@ -486,7 +489,7 @@ document.getElementById("players").onclick = () => {
     document.getElementById("threePlayerInstructions").style.display = "flex";
     levelNum = threePlayerStartingIndex;
     listsToThree();
-    flagSpeedDebuff = 0.9;
+    flagSpeedDebuff = 0.94;
     flaggedSpeed = movementSpeed * flagSpeedDebuff;
     flaggedMaxVel = maxVel * flagSpeedDebuff;
   } else {

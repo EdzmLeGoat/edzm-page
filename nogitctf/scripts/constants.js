@@ -70,7 +70,7 @@ const initialScoreDelay = 3;
 //stylistic constants
 const backgroundTransparency = 0.55;
 const outlineWidth = 1;
-const reboundWidth = 2;
+const reboundWidth = 3;
 const transitionSpeed = 5;
 const flashFrames = fps / 2;
 
@@ -100,7 +100,8 @@ const gamePlayerOne = new Player(
   "a",
   "s",
   "d",
-  0
+  0,
+  "red"
 );
 const gamePlayerTwo = new Player(
   1000,
@@ -121,7 +122,8 @@ const gamePlayerTwo = new Player(
   "j",
   "k",
   "l",
-  1
+  1,
+  "blue"
 );
 const gamePlayerThree = new Player(
   1000,
@@ -142,7 +144,8 @@ const gamePlayerThree = new Player(
   "ArrowLeft".toLowerCase(),
   "ArrowDown".toLowerCase(),
   "ArrowRight".toLowerCase(),
-  2
+  2,
+  "darkgreen"
 );
 
 //level constants
