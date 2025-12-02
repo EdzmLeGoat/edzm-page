@@ -474,6 +474,7 @@ runGame();
 
 document.getElementById("restart").onclick = () => {
   animations.forEach((animation) => animation.cancel());
+  clearRect.h = 0;
   if (!mapLocked) changeLevel();
   runGame();
 };
