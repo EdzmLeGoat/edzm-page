@@ -3,7 +3,8 @@ const levelClearDown = async (objectList) => {
   const max = ground.y + ground.h;
   let animationId = null;
   let isRunning = true;
-
+  clearRect.h = 0;
+  clearRect.y = 0;
   return new Promise((resolve) => {
     const animate = () => {
       if (!isRunning) return;
@@ -35,7 +36,8 @@ const levelClearUp = async (objectList, drawNothing) => {
   const max = ground.y + ground.h;
   let animationId = null;
   let isRunning = true;
-
+  clearRect.h = canvHeight;
+  clearRect.y = 0;
   return new Promise((resolve) => {
     const animate = () => {
       if (!isRunning) return;
