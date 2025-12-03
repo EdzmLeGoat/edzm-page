@@ -118,10 +118,10 @@ const gamePlayerTwo = new Player(
   0,
   0,
   "two",
-  "i",
-  "j",
-  "k",
-  "l",
+  "ArrowUp".toLowerCase(),
+  "ArrowLeft".toLowerCase(),
+  "ArrowDown".toLowerCase(),
+  "ArrowRight".toLowerCase(),
   1,
   "blue"
 );
@@ -140,10 +140,10 @@ const gamePlayerThree = new Player(
   0,
   0,
   "three",
-  "ArrowUp".toLowerCase(),
-  "ArrowLeft".toLowerCase(),
-  "ArrowDown".toLowerCase(),
-  "ArrowRight".toLowerCase(),
+  "t",
+  "f",
+  "g",
+  "h",
   2,
   "darkgreen"
 );

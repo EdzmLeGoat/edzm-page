@@ -1,4 +1,4 @@
-let keysPressed = [];
+const keysPressed = new Set();
 const gamePlayers = [gamePlayerOne, gamePlayerTwo];
 const wallPushes = [0, 0];
 const inAirs = [false, false];
@@ -21,13 +21,12 @@ const listsToTwo = () => {
 };
 
 document.addEventListener("keydown", (event) => {
-  if (!keysPressed.includes(event.key.toLowerCase())) {
-    keysPressed.push(event.key.toLowerCase());
-  }
+  // Track by event.code to avoid localization/shift issues and avoid repeated toLowerCase calls
+  keysPressed.add(event.code);
 });
 
 document.addEventListener("keyup", (event) => {
-  keysPressed = keysPressed.filter((e) => e != event.key.toLowerCase());
+  keysPressed.delete(event.code);
 });
 
 const blockedKeys = new Set([
@@ -48,42 +47,68 @@ window.addEventListener(
   false
 );
 
+// convert player's key string (e.g. 'a', 'ArrowUp', 'arrowup') to an event.code style string ('KeyA', 'ArrowUp')
+const keyToCode = (k) => {
+  if (!k) return k;
+  if (typeof k !== "string") return k;
+  if (k.length === 1 && /[a-zA-Z]/.test(k)) return "Key" + k.toUpperCase();
+  const lower = k.toLowerCase();
+  if (lower.startsWith("arrow")) {
+    const suffix = lower.slice(5);
+    return "Arrow" + suffix.charAt(0).toUpperCase() + suffix.slice(1);
+  }
+  if (lower === "space") return "Space";
+  // if already looks like a code (e.g., 'KeyA' or 'ArrowUp'), return as-is with normalized casing
+  return k;
+};
+
 //precondition: player is not in any walls before out this function is run
 const physics = (gamePlayer, setAirMethod, setSmashMethod) => {
   gamePlayer.maxVel = gamePlayer.flagged ? flaggedMaxVel : maxVel;
   gamePlayer.maxVel *=
     wallPushes[gamePlayer.index] > 0 ? pushMaxVelMultiplication : 1;
 
-  for (key of keysPressed) {
-    if (key == gamePlayer.rk) {
-      gamePlayer.xvel +=
-        gamePlayer.movementSpeed *
-        (wallPushes[gamePlayer.index] > 0 ? wallPushback : 1);
-      if (wallPushes[gamePlayer.index] > 0) {
-        pushingAnims[gamePlayer.index] = flashFrames;
-        gamePlayer.yvel -= wallVertBoost;
-      }
-    } else if (key == gamePlayer.lk) {
-      gamePlayer.xvel -=
-        gamePlayer.movementSpeed *
-        (wallPushes[gamePlayer.index] < 0 ? wallPushback : 1);
-      if (wallPushes[gamePlayer.index] < 0) {
-        pushingAnims[gamePlayer.index] = flashFrames;
-        gamePlayer.yvel -= wallVertBoost;
-      }
-    } else if (key == gamePlayer.uk && !inAirs[gamePlayer.index]) {
-      setAirMethod(true);
-      gamePlayer.yvel = -jump;
-    } else if (key == gamePlayer.dk && inAirs[gamePlayer.index]) {
-      setSmashMethod(true);
-      gamePlayer.xvel *= smashStop;
-      if (quadraticSmash) {
-        gamePlayer.yvel += smash;
-      } else {
-        gamePlayer.yvel = smash;
-      }
+  const rkCode = keyToCode(gamePlayer.rk);
+  const lkCode = keyToCode(gamePlayer.lk);
+  const ukCode = keyToCode(gamePlayer.uk);
+  const dkCode = keyToCode(gamePlayer.dk);
+
+  // check keys by presence in the Set so multiple keys can apply
+  if (keysPressed.has(rkCode)) {
+    gamePlayer.xvel +=
+      gamePlayer.movementSpeed *
+      (wallPushes[gamePlayer.index] > 0 ? wallPushback : 1);
+    if (wallPushes[gamePlayer.index] > 0) {
+      pushingAnims[gamePlayer.index] = flashFrames;
+      gamePlayer.yvel -= wallVertBoost;
     }
   }
+
+  if (keysPressed.has(lkCode)) {
+    gamePlayer.xvel -=
+      gamePlayer.movementSpeed *
+      (wallPushes[gamePlayer.index] < 0 ? wallPushback : 1);
+    if (wallPushes[gamePlayer.index] < 0) {
+      pushingAnims[gamePlayer.index] = flashFrames;
+      gamePlayer.yvel -= wallVertBoost;
+    }
+  }
+
+  if (keysPressed.has(ukCode) && !inAirs[gamePlayer.index]) {
+    setAirMethod(true);
+    gamePlayer.yvel = -jump;
+  }
+
+  if (keysPressed.has(dkCode) && inAirs[gamePlayer.index]) {
+    setSmashMethod(true);
+    gamePlayer.xvel *= smashStop;
+    if (quadraticSmash) {
+      gamePlayer.yvel += smash;
+    } else {
+      gamePlayer.yvel = smash;
+    }
+  }
+
   gamePlayer.updateX();
 
   gamePlayer.xvel = setMax(gamePlayer.xvel, gamePlayer.maxVel);
@@ -93,10 +118,10 @@ const physics = (gamePlayer, setAirMethod, setSmashMethod) => {
 const doHorizontalStuff = (gamePlayer, platforms, setAirMethod) => {
   checkWallColl(gamePlayer, platforms);
 
-  groundResults = groundLevel(gamePlayer, platforms);
+  let groundResults = groundLevel(gamePlayer, platforms);
   let isOnPlatform = false;
 
-  for (res of groundResults) {
+  for (let res of groundResults) {
     let wall = res[0];
     let pos = res[1];
     let inOut = res[2];
@@ -204,7 +229,7 @@ const checkWallColl = (gamePlayer, platforms) => {
 
 //precondition: player is not in any walls before this function is run
 const checkFloor = (gamePlayer, platforms, setAirMethod, setSmashMethod) => {
-  groundResults = groundLevel(gamePlayer, platforms);
+  let groundResults = groundLevel(gamePlayer, platforms);
   // Use traditional for loop with cached length
   for (let i = 0; i < platforms.length; i++) {
     const wall = platforms[i];
@@ -355,6 +380,7 @@ function doEverything(
   movingDangers,
   areMoving
 ) {
+  console.log(keysPressed);
   /* gravity, horizontal movement */
   let playersPlatforms = [];
   //allows the colored stuff's x and y's to be moved separately.
@@ -448,7 +474,7 @@ function doEverything(
 
   for (const player of gamePlayers) {
     if (pushingAnims[player.index]) {
-      colors = [0, 0, 0];
+      let colors = [0, 0, 0];
       colors[player.index] = 255;
       player.oc = `rgba(${colors[0]},${colors[2]},${colors[1]},1)`;
       player.outlineWidth = reboundWidth;
@@ -463,6 +489,7 @@ function doEverything(
 }
 
 function threePlayerDoEverything(objects, platforms, movingPlats, areMoving) {
+  console.log(keysPressed);
   /* gravity, horizontal movement */
   let playersPlatforms = [];
   //allows the colored stuff's x and y's to be moved separately.
